@@ -1,28 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.SignalR.Client;
+using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ChatClient
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
+        private HubConnection _connection;
+
         public MainWindow()
         {
             InitializeComponent();
+            StartConnection();
+        }
+
+        private async void StartConnection()
+        {
+            _connection = new HubConnectionBuilder()
+                .WithUrl("https://localhost:7045/chathub") // Din SignalR-serveradress
+                .WithAutomaticReconnect()
+                .Build();
+
+            _connection.On<string, string>("ReceiveMessage", (user, message) =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    ChatLog.Text += $"{user}: {message}{Environment.NewLine}";
+                });
+            });
+
+            try
+            {
+                await _connection.StartAsync();
+                ChatLog.Text += "🔌 Ansluten till servern\n";
+            }
+            catch (Exception ex)
+            {
+                ChatLog.Text += $"❌ Fel vid anslutning: {ex.Message}\n";
+            }
+        }
+
+        private async void SendButton_Click(object sender, RoutedEventArgs e)
+        {
+            var user = UsernameBox.Text;
+            var message = MessageBox.Text;
+
+            if (!string.IsNullOrWhiteSpace(user) && !string.IsNullOrWhiteSpace(message))
+            {
+                await _connection.InvokeAsync("SendMessage", user, message);
+                MessageBox.Clear();
+            }
         }
     }
 }
