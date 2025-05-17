@@ -42,13 +42,24 @@ namespace ChatClient
 
         private async void SendButton_Click(object sender, RoutedEventArgs e)
         {
-            var user = UsernameBox.Text;
-            var message = MessageBox.Text;
-
-            if (!string.IsNullOrWhiteSpace(user) && !string.IsNullOrWhiteSpace(message))
+            if (_connection.State == HubConnectionState.Connected)
             {
-                await _connection.InvokeAsync("SendMessage", user, message);
-                MessageBox.Clear();
+                string user = UsernameBox.Text;
+                string message = MessageInput.Text;
+
+                try
+                {
+                    await _connection.InvokeAsync("SendMessage", user, message);
+                    MessageInput.Text = ""; // Töm efter skickat
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Fel vid sändning: {ex.Message}");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Ej ansluten till servern.");
             }
         }
     }
