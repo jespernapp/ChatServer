@@ -12,6 +12,9 @@
         <TextBox x:Name="ChatLog" Grid.Row="0" Height="200" Margin="0,0,0,10" 
                  IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
 
+        <ListBox x:Name="ChatList" Height="200" Margin="0,0,0,10"
+                 FontFamily="Consolas" FontSize="14" Background="#FFFDF6F0"/>
+
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
             <TextBox x:Name="UsernameBox" Width="100" Margin="0,0,10,0" Text="Namn"/>
             <TextBox x:Name="MessageInput" Width="200" Text="Meddelande"/>

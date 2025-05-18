@@ -12,6 +12,15 @@ namespace ChatClient
         {
             InitializeComponent();
             StartConnection();
+            //Enter för att skicka meddelande
+            MessageInput.KeyDown += (s, e) =>
+            {
+                if (e.Key == System.Windows.Input.Key.Enter)
+                {
+                    SendButton_Click(null, null);
+                    e.Handled = true;
+                }
+            };
         }
 
         private async void StartConnection()
@@ -25,7 +34,10 @@ namespace ChatClient
             {
                 Dispatcher.Invoke(() =>
                 {
-                    ChatLog.Text += $"{user}: {message}{Environment.NewLine}";
+                    var time = DateTime.Now.ToString("HH:mm");
+                    ChatList.Items.Add($"{user}: {message}");
+                    //autoscroll
+                    ChatList.ScrollIntoView(ChatList.Items[ChatList.Items.Count - 1]);
                 });
             });
 
