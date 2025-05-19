@@ -35,7 +35,7 @@ namespace ChatClient
                 Dispatcher.Invoke(() =>
                 {
                     var time = DateTime.Now.ToString("HH:mm");
-                    ChatList.Items.Add($"{user}: {message}");
+                    ChatList.Items.Add($"[{time}] {user}: {message}");
                     //autoscroll
                     ChatList.ScrollIntoView(ChatList.Items[ChatList.Items.Count - 1]);
                 });
