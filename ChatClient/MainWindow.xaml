@@ -15,6 +15,8 @@
         <ListBox x:Name="ChatList" Height="200" Margin="0,0,0,10"
                  FontFamily="Consolas" FontSize="14" Background="#FFFDF6F0"/>
 
+        <ListBox x:Name="UserList" Grid.Row="0" HorizontalAlignment="Right" Width="100" Margin="10, 0, 0, 10"/>
+
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
             <TextBox x:Name="UsernameBox" Width="100" Margin="0,0,10,0" Text="Namn"/>
             <TextBox x:Name="MessageInput" Width="200" Text="Meddelande"/>

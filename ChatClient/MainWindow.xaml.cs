@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using System;
+using System.Collections;
 using System.Windows;
+using System.Collections.Generic;
 
 namespace ChatClient
 {
@@ -41,9 +43,22 @@ namespace ChatClient
                 });
             });
 
+            _connection.On<IEnumerable<string>>("UpdateUserList", (users) =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    UserList.Items.Clear();
+                    foreach (var user in users)
+                    {
+                        UserList.Items.Add(user);
+                    }
+                });
+            });
+
             try
             {
                 await _connection.StartAsync();
+                await _connection.InvokeAsync("RegisterUser", UsernameBox.Text);
                 ChatLog.Text += "🔌 Ansluten till servern\n";
             }
             catch (Exception ex)
