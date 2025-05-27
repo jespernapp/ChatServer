@@ -22,6 +22,8 @@
             <TextBox x:Name="MessageInput" Width="200" Text="Meddelande"/>
         </StackPanel>
 
+        <Button x:Name="ConnectButton" Content="Connect" Click="ConnectButton_Click"
+        
         <Button Grid.Row="2" Content="Skicka" Click="SendButton_Click" Height="30"/>
         
     </Grid>

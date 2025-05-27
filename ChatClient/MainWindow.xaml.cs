@@ -58,8 +58,18 @@ namespace ChatClient
             try
             {
                 await _connection.StartAsync();
-                await _connection.InvokeAsync("RegisterUser", UsernameBox.Text);
-                ChatLog.Text += "🔌 Ansluten till servern\n";
+
+                string username = UsernameBox.Text.Trim();
+                if (!string.IsNullOrWhiteSpace(username) && username != "Namn")
+                {
+                    await _connection.InvokeAsync("RegisterUser", UsernameBox.Text);
+                    ChatLog.Text += "🔌 Ansluten till servern\n";
+                }
+                else
+                {
+                    ChatLog.Text += $"Du måste fylla i ett användarnamn först\n";
+                }
+
             }
             catch (Exception ex)
             {
