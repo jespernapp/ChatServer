@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Windows;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ChatClient
 {
@@ -13,7 +14,6 @@ namespace ChatClient
         public MainWindow()
         {
             InitializeComponent();
-            StartConnection();
             //Enter för att skicka meddelande
             MessageInput.KeyDown += (s, e) =>
             {
@@ -25,7 +25,26 @@ namespace ChatClient
             };
         }
 
-        private async void StartConnection()
+        private bool _isConnected = false;
+        private async void ConnectButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (_isConnected == false)
+            {
+                ChatLog.Text += $"Already connected\n";
+            }
+
+            string username = UsernameBox.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(username) || username == "Namn")
+            {
+                ChatLog.Text += $"Please enter a username first\n";
+                return;
+            }
+            await StartConnection(username);
+        }
+
+        private async Task StartConnection(string username)
         {
             _connection = new HubConnectionBuilder()
                 .WithUrl("https://localhost:7045/chathub") // Din SignalR-serveradress
@@ -58,17 +77,9 @@ namespace ChatClient
             try
             {
                 await _connection.StartAsync();
-
-                string username = UsernameBox.Text.Trim();
-                if (!string.IsNullOrWhiteSpace(username) && username != "Namn")
-                {
-                    await _connection.InvokeAsync("RegisterUser", UsernameBox.Text);
-                    ChatLog.Text += "🔌 Ansluten till servern\n";
-                }
-                else
-                {
-                    ChatLog.Text += $"Du måste fylla i ett användarnamn först\n";
-                }
+                await _connection.InvokeAsync("RegisterUser", username);
+                _isConnected = true;
+                ChatLog.Text += $"Connected as {username}";
 
             }
             catch (Exception ex)

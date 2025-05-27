@@ -21,10 +21,9 @@
             <TextBox x:Name="UsernameBox" Width="100" Margin="0,0,10,0" Text="Namn"/>
             <TextBox x:Name="MessageInput" Width="200" Text="Meddelande"/>
         </StackPanel>
-
-        <Button x:Name="ConnectButton" Content="Connect" Click="ConnectButton_Click"
-        
         <Button Grid.Row="2" Content="Skicka" Click="SendButton_Click" Height="30"/>
-        
+
+        <Button x:Name="ConnectButton" Content="Connect" Click="ConnectButton_Click" Margin="280,186,0,0" />
+
     </Grid>
 </Window>
