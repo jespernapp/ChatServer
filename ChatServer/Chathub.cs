@@ -1,32 +1,31 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
 namespace ChatServer
 {
     public class Chathub : Hub
     {
+        // Trådsäker dictionary
+        private static ConcurrentDictionary<string, string> ConnectedUsers = new();
+
         public async Task SendMessage(string user, string message)
         {
             await Clients.All.SendAsync("ReceiveMessage", user, message);
         }
-        private static Dictionary<string, string> _connections = new();
-        
-        public override async Task OnConnectedAsync()
-        {
-            await base.OnConnectedAsync();
-        }
 
         public async Task RegisterUser(string username)
         {
-            _connections[Context.ConnectionId] = username;
+            ConnectedUsers[Context.ConnectionId] = username;
 
-            await Clients.All.SendAsync("UpdateUserList", _connections.Values);
+            await Clients.All.SendAsync("UpdateUserList", ConnectedUsers.Values);
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            _connections.Remove(Context.ConnectionId);
-            await Clients.All.SendAsync("UpdateUserList", _connections.Values);
+            ConnectedUsers.TryRemove(Context.ConnectionId, out _);
+
+            await Clients.All.SendAsync("UpdateUserList", ConnectedUsers.Values);
             await base.OnDisconnectedAsync(exception);
         }
     }
