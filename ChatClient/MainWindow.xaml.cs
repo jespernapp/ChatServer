@@ -32,6 +32,7 @@ namespace ChatClient
             if (_isConnected == false)
             {
                 ChatLog.Text += $"Already connected\n";
+                return;
             }
 
             string username = UsernameBox.Text.Trim();
@@ -79,6 +80,7 @@ namespace ChatClient
                 await _connection.StartAsync();
                 await _connection.InvokeAsync("RegisterUser", username);
                 _isConnected = true;
+                ConnectButton.IsEnabled = false;
                 ChatLog.Text += $"Connected as {username}";
 
             }
@@ -94,6 +96,8 @@ namespace ChatClient
             {
                 string user = UsernameBox.Text;
                 string message = MessageInput.Text;
+                if (string.IsNullOrWhiteSpace(message))
+                    return;
 
                 try
                 {
@@ -102,12 +106,13 @@ namespace ChatClient
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Fel vid sändning: {ex.Message}");
+                    MessageBox.Show($"Connection error: {ex.Message}");
+                    ChatLog.Text += $"Connection error: {ex.Message}\n";
                 }
             }
             else
             {
-                MessageBox.Show("Ej ansluten till servern.");
+                ChatLog.Text += "You are not connected to the server.\n";
             }
         }
     }

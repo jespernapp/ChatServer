@@ -16,8 +16,14 @@ namespace ChatServer
 
         public async Task RegisterUser(string username)
         {
-            ConnectedUsers[Context.ConnectionId] = username;
+            if (ConnectedUsers.Values.Contains(username))
+            {
+                await Clients.Caller.SendAsync("ReceiveMessage", "Server", $"❌ Username '{username} already taken.");
+                Context.Abort();
+                return;
+            }
 
+            ConnectedUsers[Context.ConnectionId] = username;
             await Clients.All.SendAsync("UpdateUserList", ConnectedUsers.Values);
         }
 
