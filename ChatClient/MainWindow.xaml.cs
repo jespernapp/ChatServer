@@ -86,33 +86,36 @@ namespace ChatClient
             }
             catch (Exception ex)
             {
-                ChatLog.Text += $"❌ Fel vid anslutning: {ex.Message}\n";
+                ChatLog.Text += $"❌ Connection error: {ex.Message}\n";
             }
         }
 
         private async void SendButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_connection.State == HubConnectionState.Connected)
+            if (_connection == null || _connection.State != HubConnectionState.Connected)
             {
-                string user = UsernameBox.Text;
-                string message = MessageInput.Text;
-                if (string.IsNullOrWhiteSpace(message))
-                    return;
-
-                try
-                {
-                    await _connection.InvokeAsync("SendMessage", user, message);
-                    MessageInput.Text = ""; // Töm efter skickat
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Connection error: {ex.Message}");
-                    ChatLog.Text += $"Connection error: {ex.Message}\n";
-                }
+                ChatLog.Text += "❌ Not connected to the server.\n";
+                return;
             }
-            else
+
+            string user = UsernameBox.Text.Trim();
+            string message = MessageInput.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(message))
             {
-                ChatLog.Text += "You are not connected to the server.\n";
+                ChatLog.Text += "⚠️ Message cannot be empty.\n";
+                return;
+            }
+
+            try
+            {
+                await _connection.InvokeAsync("SendMessage", user, message);
+                MessageInput.Text = ""; // empty after send
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error sending message: {ex.Message}");
+                ChatLog.Text += $"❌ Error sending message: {ex.Message}\n";
             }
         }
     }

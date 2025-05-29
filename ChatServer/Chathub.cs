@@ -19,7 +19,6 @@ namespace ChatServer
             if (ConnectedUsers.Values.Contains(username))
             {
                 await Clients.Caller.SendAsync("ReceiveMessage", "Server", $"❌ Username '{username} already taken.");
-                Context.Abort();
                 return;
             }
 
