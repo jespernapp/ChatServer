@@ -29,7 +29,7 @@ namespace ChatClient
         private async void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
 
-            if (_isConnected == false)
+            if (_isConnected || (_connection != null && _connection.State == HubConnectionState.Connected))
             {
                 ChatLog.Text += $"Already connected\n";
                 return;
