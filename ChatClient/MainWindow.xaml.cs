@@ -127,6 +127,7 @@ namespace ChatClient
                 _isConnected = false;
                 var time = DateTime.Now.ToString("HH:mm");
                 ChatList.Items.Add($"[{time}] Disconnected from server.");
+                DisconnectButton.IsEnabled = false;
 
                 ConnectButton.IsEnabled = true;
                 UsernameBox.IsEnabled = true;
