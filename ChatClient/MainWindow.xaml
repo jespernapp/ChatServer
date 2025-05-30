@@ -9,19 +9,29 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBox x:Name="ChatLog" Grid.Row="0" Height="200" Margin="0,0,0,10" 
-                 IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+        <Grid Grid.Row="0" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <ListBox x:Name="ChatList" Height="200" Margin="0,0,0,10"
-                 FontFamily="Consolas" FontSize="14" Background="#FFFDF6F0"/>
+            <ListBox x:Name="ChatList" Grid.Column="0" Height="200"
+                     FontFamily="Consolas" FontSize="14" Background="#FFFDF6F0"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"/>
 
-        <ListBox x:Name="UserList" Grid.Row="0" HorizontalAlignment="Right" Width="100" Margin="10, 0, 0, 10"/>
+            <ListBox x:Name="UserList" Grid.Column="1" Height="200"
+                     Width="Auto" Margin="10,0,0,0"/>
+        </Grid>
+        <!--Usernames, messages and connect-->
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
-            <TextBox x:Name="UsernameBox" Width="100" Margin="0,0,10,0" Text="Namn"/>
-            <TextBox x:Name="MessageInput" Width="200" Text="Meddelande"/>
-            <Button x:Name="ConnectButton" Content="Connect" Click="ConnectButton_Click" Margin="10,0,0,0" />
-        </StackPanel>
-        <Button Grid.Row="2" Content="Skicka" Click="SendButton_Click" Height="30"/>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+                <TextBox x:Name="UsernameBox" Width="100" Margin="0,0,10,0" Text="Name"/>
+                <Button x:Name="ConnectButton" Content="Connect" Click="ConnectButton_Click" Margin="0,0,0,10" Height="58"/>
+                <TextBox x:Name="MessageInput" Width="200" Text="Message"/>
+            </StackPanel>
+
+            <!-- Send Button -->
+        <Button Grid.Row="2" Content="Send" Click="SendButton_Click" Height="30"/>
     </Grid>
 </Window>
+

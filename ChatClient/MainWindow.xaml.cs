@@ -31,7 +31,7 @@ namespace ChatClient
 
             if (_isConnected || (_connection != null && _connection.State == HubConnectionState.Connected))
             {
-                ChatLog.Text += $"Already connected\n";
+                ChatList.Items.Add($"Already connected\n");
                 return;
             }
 
@@ -39,7 +39,7 @@ namespace ChatClient
 
             if (string.IsNullOrWhiteSpace(username) || username == "Namn")
             {
-                ChatLog.Text += $"Please enter a username first\n";
+                ChatList.Items.Add($"Please enter a username first\n");
                 return;
             }
             await StartConnection(username);
@@ -81,12 +81,12 @@ namespace ChatClient
                 await _connection.InvokeAsync("RegisterUser", username);
                 _isConnected = true;
                 ConnectButton.IsEnabled = false;
-                ChatLog.Text += $"Connected as {username}";
+                ChatList.Items.Add($"Connected as {username}");
 
             }
             catch (Exception ex)
             {
-                ChatLog.Text += $"❌ Connection error: {ex.Message}\n";
+                ChatList.Items.Add($"❌ Connection error: {ex.Message}\n");
             }
         }
 
@@ -94,7 +94,7 @@ namespace ChatClient
         {
             if (_connection == null || _connection.State != HubConnectionState.Connected)
             {
-                ChatLog.Text += "❌ Not connected to the server.\n";
+                ChatList.Items.Add("❌ Not connected to the server.\n");
                 return;
             }
 
@@ -103,7 +103,7 @@ namespace ChatClient
 
             if (string.IsNullOrWhiteSpace(message))
             {
-                ChatLog.Text += "⚠️ Message cannot be empty.\n";
+                ChatList.Items.Add("⚠️ Message cannot be empty.\n");
                 return;
             }
 
@@ -115,8 +115,13 @@ namespace ChatClient
             catch (Exception ex)
             {
                 MessageBox.Show($"Error sending message: {ex.Message}");
-                ChatLog.Text += $"❌ Error sending message: {ex.Message}\n";
+                ChatList.Items.Add($"❌ Error sending message: {ex.Message}\n");
             }
+        }
+
+        private void ConnectButton_Click_1(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
