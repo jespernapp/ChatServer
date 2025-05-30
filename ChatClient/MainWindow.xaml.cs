@@ -23,6 +23,15 @@ namespace ChatClient
                     e.Handled = true;
                 }
             };
+            //Enter för att ansluta
+            UsernameBox.KeyDown += (s, e) =>
+            {
+                if (e.Key == System.Windows.Input.Key.Enter)
+                {
+                    ConnectButton_Click(null, null);
+                    e.Handled = true;
+                }
+            };
         }
 
         private bool _isConnected = false;
@@ -82,6 +91,7 @@ namespace ChatClient
                 _isConnected = true;
                 ConnectButton.IsEnabled = false;
                 ChatList.Items.Add($"Connected as {username}");
+                MessageInput.Focus();
 
             }
             catch (Exception ex)
@@ -119,9 +129,6 @@ namespace ChatClient
             }
         }
 
-        private void ConnectButton_Click_1(object sender, RoutedEventArgs e)
-        {
 
-        }
     }
 }
