@@ -90,6 +90,7 @@ namespace ChatClient
                 await _connection.InvokeAsync("RegisterUser", username);
                 _isConnected = true;
                 ConnectButton.IsEnabled = false;
+                UsernameBox.IsEnabled = false;
                 ChatList.Items.Add($"Connected as {username}");
                 MessageInput.Focus();
 
@@ -100,7 +101,22 @@ namespace ChatClient
             }
         }
 
-        private async void SendButton_Click(object sender, RoutedEventArgs e)
+        private async void DisconnectButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_connection == null && _connection.State != HubConnectionState.Connected)
+            {
+                await _connection.StopAsync();
+                _isConnected = false;
+
+                ChatList.Items.Add("Disconnected from server.");
+
+                ConnectButton.IsEnabled = true;
+                UsernameBox.IsEnabled = true;
+                MessageInput.IsEnabled = false;
+            }
+        }
+
+            private async void SendButton_Click(object sender, RoutedEventArgs e)
         {
             if (_connection == null || _connection.State != HubConnectionState.Connected)
             {

@@ -27,6 +27,7 @@
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
             <TextBox x:Name="UsernameBox" Width="100" Margin="0,0,10,0" Text="Name"/>
             <Button x:Name="ConnectButton" Content="Connect" Click="ConnectButton_Click" Margin="0,0,0,10" Height="58"/>
+            <Button x:Name="DisconnectButton_Click" Content="Disconnect" Margin="0,0,0,10" Height="58"/>
             <TextBox x:Name="MessageInput" Width="200" Text="Message"/>
         </StackPanel>
 
