@@ -14,6 +14,22 @@ namespace ChatClient
         public MainWindow()
         {
             InitializeComponent();
+
+            //autoclear UserNamebox
+            UsernameBox.GotFocus += (s, e) =>
+            {
+                if (UsernameBox.Text == "Name")
+                    UsernameBox.Text = "";
+            };
+
+            //Autoclear MessageInput
+            MessageInput.GotFocus += (s, e) =>
+            {
+                if (MessageInput.Text == "Message")
+                    MessageInput.Text = "";
+            };
+
+
             //Enter för att skicka meddelande
             MessageInput.KeyDown += (s, e) =>
             {
@@ -107,8 +123,8 @@ namespace ChatClient
             {
                 await _connection.StopAsync();
                 _isConnected = false;
-
-                ChatList.Items.Add("Disconnected from server.");
+                var time = DateTime.Now.ToString("HH:mm");
+                ChatList.Items.Add($"[{time}] Disconnected from server.");
 
                 ConnectButton.IsEnabled = true;
                 UsernameBox.IsEnabled = true;
@@ -116,7 +132,7 @@ namespace ChatClient
             }
         }
 
-            private async void SendButton_Click(object sender, RoutedEventArgs e)
+        private async void SendButton_Click(object sender, RoutedEventArgs e)
         {
             if (_connection == null || _connection.State != HubConnectionState.Connected)
             {
