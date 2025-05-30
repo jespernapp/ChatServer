@@ -14,7 +14,7 @@ namespace ChatClient
         public MainWindow()
         {
             InitializeComponent();
-
+            DisconnectButton.IsEnabled = false;
             //autoclear UserNamebox
             UsernameBox.GotFocus += (s, e) =>
             {
@@ -107,7 +107,9 @@ namespace ChatClient
                 _isConnected = true;
                 ConnectButton.IsEnabled = false;
                 UsernameBox.IsEnabled = false;
-                ChatList.Items.Add($"Connected as {username}");
+                var time = DateTime.Now.ToString("HH:mm");
+                ChatList.Items.Add($"[{time}] Connected as {username}");
+                DisconnectButton.IsEnabled = true;
                 MessageInput.Focus();
 
             }
@@ -119,7 +121,7 @@ namespace ChatClient
 
         private async void DisconnectButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_connection == null && _connection.State != HubConnectionState.Connected)
+            if (_connection != null && _connection.State == HubConnectionState.Connected)
             {
                 await _connection.StopAsync();
                 _isConnected = false;
@@ -134,7 +136,7 @@ namespace ChatClient
 
         private async void SendButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_connection == null || _connection.State != HubConnectionState.Connected)
+            if (_connection == null && _connection.State != HubConnectionState.Connected)
             {
                 ChatList.Items.Add("❌ Not connected to the server.\n");
                 return;
