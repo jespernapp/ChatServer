@@ -23,14 +23,17 @@ namespace ChatServer
             }
 
             ConnectedUsers[Context.ConnectionId] = username;
+            await Clients.All.SendAsync("ReceiveMessage", "Server", $"{username} has joined the chat.");
             await Clients.All.SendAsync("UpdateUserList", ConnectedUsers.Values);
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            ConnectedUsers.TryRemove(Context.ConnectionId, out _);
-
-            await Clients.All.SendAsync("UpdateUserList", ConnectedUsers.Values);
+            if (ConnectedUsers.TryRemove(Context.ConnectionId, out var username))
+            {
+                await Clients.All.SendAsync("ReceiveMessage", "Server", $"{username} has left the chat.");
+                await Clients.All.SendAsync("UpdateUserList", ConnectedUsers.Values);
+            }
             await base.OnDisconnectedAsync(exception);
         }
     }
