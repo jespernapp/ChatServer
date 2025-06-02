@@ -36,5 +36,19 @@ namespace ChatServer
             }
             await base.OnDisconnectedAsync(exception);
         }
+
+        //usertyping 
+        public async Task UserTyping(string username)
+        {
+            await Clients.Others.SendAsync("UserTyping", username);
+        }
+
+        public async Task UserStoppedTyping(string username)
+        {
+            await Clients.Others.SendAsync("UserStoppedTyping", username);
+        }
+
+
+
     }
 }

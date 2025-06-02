@@ -9,8 +9,19 @@ using System.Media;
 namespace ChatClient
 {
     public partial class MainWindow : Window
+
+
     {
         private HubConnection _connection;
+
+        //useristyping
+        private DateTime _lastTypingTime = DateTime.MinValue;
+
+        private bool _isTyping = false;
+
+        private readonly TimeSpan TypingTimeout = TimeSpan.FromSeconds(3);
+
+        private System.Windows.Threading.DispatcherTimer _typingTimer;
 
         public MainWindow()
         {
@@ -48,6 +59,16 @@ namespace ChatClient
                     ConnectButton_Click(null, null);
                     e.Handled = true;
                 }
+            };
+
+            MessageInput.TextChanged += async (s, e) =>
+            {
+                if (!_isTyping && _connection != null && _connection.State == HubConnectionState.Connected)
+                {
+                    _isTyping = true;
+                    await _connection.InvokeAsync("UserTyping", UsernameBox.Text.Trim());
+                }
+                _lastTypingTime = DateTime.Now;
             };
         }
 
@@ -104,6 +125,22 @@ namespace ChatClient
                 });
             });
 
+            _connection.On<string>("UserTyping", (typingUser) =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    TypingIndicator.Text = $"{username} is typing...";
+                });
+            });
+
+            _connection.On<string>("UserStoppedTyping", (typingUser) =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    TypingIndicator.Text = "";
+                });
+            });
+
             try
             {
                 await _connection.StartAsync();
@@ -115,13 +152,16 @@ namespace ChatClient
                 ChatList.Items.Add($"[{time}] Connected as {username}");
                 DisconnectButton.IsEnabled = true;
                 MessageInput.Focus();
-
+                InitTypingTimer();
             }
             catch (Exception ex)
             {
                 ChatList.Items.Add($"❌ Connection error: {ex.Message}\n");
             }
         }
+
+
+
 
         private void PlayNotificationSound()
         {
@@ -136,6 +176,22 @@ namespace ChatClient
                 MessageBox.Show($"Error playing notification sound: {ex.Message}");
             }
         }
+
+        private void InitTypingTimer()
+        {
+            _typingTimer = new System.Windows.Threading.DispatcherTimer();
+            _typingTimer.Interval = TimeSpan.FromMilliseconds(500);
+            _typingTimer.Tick += async (s, e) =>
+            {
+                if (_isTyping && DateTime.Now - _lastTypingTime > TypingTimeout)
+                {
+                    _isTyping = false;
+                    await _connection.InvokeAsync("UserStoppedTyping", UsernameBox.Text.Trim());
+                }
+            };
+            _typingTimer.Start();
+        }
+
 
         private async void DisconnectButton_Click(object sender, RoutedEventArgs e)
         {
