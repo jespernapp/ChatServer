@@ -4,6 +4,7 @@ using System.Collections;
 using System.Windows;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Media;
 
 namespace ChatClient
 {
@@ -85,6 +86,9 @@ namespace ChatClient
                     ChatList.Items.Add($"[{time}] {user}: {message}");
                     //autoscroll
                     ChatList.ScrollIntoView(ChatList.Items[ChatList.Items.Count - 1]);
+
+                    if (user != "Server")
+                        PlayNotificationSound();
                 });
             });
 
@@ -116,6 +120,20 @@ namespace ChatClient
             catch (Exception ex)
             {
                 ChatList.Items.Add($"❌ Connection error: {ex.Message}\n");
+            }
+        }
+
+        private void PlayNotificationSound()
+        {
+            try
+            {
+                var player = new System.Windows.Media.MediaPlayer();
+                player.Open(new Uri("Sounds/Notification.mp3", UriKind.Relative));
+                player.Play();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error playing notification sound: {ex.Message}");
             }
         }
 
