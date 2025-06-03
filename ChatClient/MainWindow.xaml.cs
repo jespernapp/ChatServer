@@ -151,6 +151,7 @@ namespace ChatClient
                 var time = DateTime.Now.ToString("HH:mm");
                 ChatList.Items.Add($"[{time}] Connected as {username}");
                 DisconnectButton.IsEnabled = true;
+                MessageInput.IsEnabled = true;
                 MessageInput.Focus();
                 InitTypingTimer();
             }
@@ -198,20 +199,26 @@ namespace ChatClient
             if (_connection != null && _connection.State == HubConnectionState.Connected)
             {
                 await _connection.StopAsync();
+                await _connection.DisposeAsync();//dispose old connection to prevent crash
                 _isConnected = false;
                 var time = DateTime.Now.ToString("HH:mm");
                 ChatList.Items.Add($"[{time}] Disconnected from server.");
-                DisconnectButton.IsEnabled = false;
 
+                DisconnectButton.IsEnabled = false;
                 ConnectButton.IsEnabled = true;
                 UsernameBox.IsEnabled = true;
                 MessageInput.IsEnabled = false;
+
+                //stop typing-timer
+                _typingTimer?.Stop();
+                _typingTimer = null;
+                TypingIndicator.Text = ""; // clear typing indicator
             }
         }
 
         private async void SendButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_connection == null && _connection.State != HubConnectionState.Connected)
+            if (_connection == null || _connection.State != HubConnectionState.Connected)
             {
                 ChatList.Items.Add("❌ Not connected to the server.\n");
                 return;
