@@ -9,6 +9,30 @@
         <SolidColorBrush x:Key="LightBackground" Color="#FFFDFDFD"/>
         <SolidColorBrush x:Key="TextColor" Color="#333333"/>
         
+        
+        <!-- Style for the ListBox items -->
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="{StaticResource LightBackground}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{StaticResource SecondaryColor}"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border CornerRadius="6"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ScrollViewer Margin="0" x:Name="PART_ContentHost"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <!-- Rounded buttons-->
         <Style TargetType="Button">
             <Setter Property="Background" Value="{StaticResource PrimaryColor}"/>
@@ -57,10 +81,11 @@
             <ListBox x:Name="UserList" Grid.Column="1" Height="200"
                      Background="{StaticResource LightBackground}"
                      Foreground="{StaticResource TextColor}"
-                     Width="Auto" Margin="10,0,0,0"/>
+                     Width="Auto" Margin="10,0,0,0"
+                     Visibility="Collapsed"/>
 
 
-            <TextBlock x:Name="TypingIndicator" FontStyle="Italic" Margin="0,201,10,-14" Foreground="Gray"/>
+            <TextBlock x:Name="TypingIndicator" FontStyle="Italic" Margin="0,2,0,10" Foreground="Gray"/>
 
         </Grid>
         <!--Usernames, messages and connect-->
@@ -77,7 +102,7 @@
         </StackPanel>
 
             <!-- Send Button -->
-        <Button Grid.Row="2" Content="Send" Click="SendButton_Click" Height="30"
+        <Button Grid.Row="2" Content="Send" Click="SendButton_Click" Height="40"
                 Background="{StaticResource PrimaryColor}" Foreground="White"/>
     </Grid>
 </Window>
