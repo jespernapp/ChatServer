@@ -1,7 +1,7 @@
 ﻿<Window x:Class="ChatClient.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Chat Client" Height="350" Width="400">
+        Title="Chat Client" Height="400" Width="450">
 
     <Window.Resources>
         <SolidColorBrush x:Key="PrimaryColor" Color="#FF6C5B7B"/>
@@ -81,11 +81,10 @@
             <ListBox x:Name="UserList" Grid.Column="1" Height="200"
                      Background="{StaticResource LightBackground}"
                      Foreground="{StaticResource TextColor}"
-                     Width="Auto" Margin="10,0,0,0"
-                     Visibility="Collapsed"/>
+                     Width="Auto" Margin="10,0,0,0"/>
 
 
-            <TextBlock x:Name="TypingIndicator" FontStyle="Italic" Margin="0,2,0,10" Foreground="Gray"/>
+            <TextBlock x:Name="TypingIndicator" FontStyle="Italic" Margin="0,2,0,10" Foreground="Gray" Visibility="Collapsed"/>
 
         </Grid>
         <!--Usernames, messages and connect-->
