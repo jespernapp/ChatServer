@@ -148,7 +148,7 @@
             <TextBox x:Name="UsernameBox"
                      Grid.Column="0"
                      Width="85"
-                     Text="Username"/>
+                     Text="Name"/>
 
             <Button x:Name="ConnectButton"
                     Grid.Column="1"

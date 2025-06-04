@@ -129,7 +129,7 @@ namespace ChatClient
             {
                 Dispatcher.Invoke(() =>
                 {
-                    TypingIndicator.Text = $"{username} is typing...";
+                    TypingIndicator.Text = $"{typingUser} is typing...";
                 });
             });
 
